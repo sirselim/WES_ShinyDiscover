@@ -1,0 +1,20 @@
+@import url("//fonts.googleapis.com/css?family=Lobster|Cabin:400,700");
+@import url("//fonts.googleapis.com/css?family=Arvo");
+@import url("//fonts.googleapis.com/css?family=Lato");
+@import url("//fonts.googleapis.com/css?family=Ubuntu");
+
+h1 {
+  font-family: 'Lato', cursive;
+  font-weight: 500;
+  line-height: 1.1;
+  color: #0643a5;
+}
+
+body {
+  background-color: #fff;
+}
+
+div.dt-buttons {
+    float: right;
+    margin-left:10px;
+}
