@@ -112,9 +112,9 @@ shinyServer(function(input, output) {
                  "dom" = 'T<"clear">lBfrtip',
                  buttons = list('copy', 'print', list(
                    extend = 'collection',
-                   buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_tier3_filtered')), 
-                                  list(extend = 'excel', filename = paste0(input$SampleID, '_tier3_filtered')),
-                                  list(extend = 'pdf', filename = paste0(input$SampleID, '_tier3_filtered'))),
+                   buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_MutationAssessor_filtered')), 
+                                  list(extend = 'excel', filename = paste0(input$SampleID, '_MutationAssessor_filtered')),
+                                  list(extend = 'pdf', filename = paste0(input$SampleID, '_MutationAssessor_filtered'))),
                    text = 'Download'
                  ))))
   

@@ -1,5 +1,6 @@
 library(shiny)
 library(shinythemes)
+library(DT)
 
 shinyUI(fluidPage(
   
@@ -7,7 +8,7 @@ shinyUI(fluidPage(
   # theme = shinytheme("cerulean"),
   headerPanel('WESTARC: visual results discovery for exome sequence data'),
   sidebarPanel(width = 2,
-    textInput("SampleID", label = "Enter SampleID", value="DG906"),
+    textInput("SampleID", label = "Enter SampleID", value="DG1051"),
     checkboxGroupInput('show_vars', 
                        'Columns in results to show:', 
                        names(tier0),
