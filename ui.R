@@ -4,8 +4,9 @@ library(DT)
 
 shinyUI(fluidPage(
   
-  includeCSS("styles.css"),
-  # theme = shinytheme("cerulean"),
+  # theme = "lumen.css",
+  includeCSS("www/styles.css"),
+
   headerPanel('WESTARC: visual results discovery for exome sequence data'),
   sidebarPanel(width = 2,
     textInput("SampleID", label = "Enter SampleID", value="DG1051"),
