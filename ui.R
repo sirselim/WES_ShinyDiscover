@@ -27,7 +27,10 @@ shinyUI(fluidPage(
       tabPanel('Tier3 variants',
                dataTableOutput("mytable4")),
       tabPanel('MutationAssessor variants',
-               dataTableOutput("mytable5"))
+               dataTableOutput("mytable5")),
+      tabPanel('GO search',
+               textInput("GeneSymbol", label = "Enter gene symbol", value=""),
+               dataTableOutput("GOtable"))
     )
   )
 ))

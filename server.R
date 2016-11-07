@@ -67,6 +67,37 @@ shinyServer(function(input, output) {
     
   })
   
+  GO_tbl <- reactive({
+    
+    validate(
+      need(input$GeneSymbol != '', "Please select a valid gene symbol")
+    )
+    
+    search_gene <- input$GeneSymbol
+    GO_tbl <- getGO(organism = "Homo sapiens", genes = search_gene, filters = "hgnc_symbol")
+    GO_tbl
+    
+  })
+  
+  output$GOtable = renderDataTable({
+    
+    GO_tbl()[]
+    
+  },extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  caption = htmltools::tags$caption(
+    style = 'caption-side: bottom; text-align: center;',
+    'Table 6: ', htmltools::em('A list of GO terms for selected gene(s).')
+  ), plugins = 'natural', server = F,
+  options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
+                 "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
+                 buttons = list('copy', 'print', list(
+                   extend = 'collection',
+                   buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_GOterms_', file.time)), 
+                                  list(extend = 'excel', filename = paste0(input$SampleID, '_GOterms_', file.time)),
+                                  list(extend = 'pdf', filename = paste0(input$SampleID, '_GOterms_', file.time))),
+                   text = 'Download'
+                 ))))
+    
   # customize the length drop-down menu; display 10 rows per page by default
   output$mytable1 = renderDataTable({
     
@@ -184,4 +215,3 @@ shinyServer(function(input, output) {
                  ))))
   
 })
-
