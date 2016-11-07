@@ -78,7 +78,7 @@ shinyServer(function(input, output) {
   }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
-    'Table 1: ', htmltools::em('This is a simple caption for the table.')
+    'Table 1: ', htmltools::em('A list of variants passing the filter criteria for Tier0 (gene panel variants).')
   ), plugins = 'natural', server = F,
       options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                      "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
@@ -101,7 +101,7 @@ shinyServer(function(input, output) {
   }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
-    'Table 2: ', htmltools::em('This is a simple caption for the table.')
+    'Table 2: ', htmltools::em('A list of variants passing the filter criteria for Tier1.')
   ), plugins = 'natural', server = F,
   options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
@@ -124,7 +124,7 @@ shinyServer(function(input, output) {
   }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
-    'Table 3: ', htmltools::em('This is a simple caption for the table.')
+    'Table 3: ', htmltools::em('A list of variants passing the filter criteria for Tier2.')
   ), plugins = 'natural', server = T,
   options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
@@ -147,7 +147,7 @@ shinyServer(function(input, output) {
   }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
-    'Table 4: ', htmltools::em('This is a simple caption for the table.')
+    'Table 4: ', htmltools::em('A list of variants passing the filter criteria for Tier3.')
   ), plugins = 'natural', server = T,
   options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
@@ -171,7 +171,7 @@ shinyServer(function(input, output) {
   }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
-    'Table 4: ', htmltools::em('This is a simple caption for the table.')
+    'Table 5: ', htmltools::em('A list of variants predicted as being potentially most damaging (Mutation Assessor High risk), including URL to variant information.')
   ), plugins = 'natural', server = F,
   options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
