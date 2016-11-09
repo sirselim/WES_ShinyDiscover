@@ -30,6 +30,10 @@ shinyUI(fluidPage(
                dataTableOutput("mytable5")),
       tabPanel('GO search',
                textInput("GeneSymbol", label = "Enter gene symbol", value=""),
+               actionButton(
+                 inputId = "submit_loc",
+                 label = "Submit"),
+               verbatimTextOutput('GO_genes'),
                dataTableOutput("GOtable"))
     )
   )

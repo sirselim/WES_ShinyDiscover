@@ -67,22 +67,46 @@ shinyServer(function(input, output) {
     
   })
   
-  GO_tbl <- reactive({
+  # add a submit button to wait for user to input all desired genes
+  observeEvent(
+    eventExpr = input[["submit_loc"]],
+    handlerExpr = {
+      validate(
+        need(input$GeneSymbol != '', "Please select a valid gene symbol")
+      )
+      
+    }
+  )
+  
+  # show genes being input int realtime
+  output$GO_genes <- renderPrint({
     
+    genes <- as.character(unlist(strsplit(input$GeneSymbol, ", ")))
+    cat("Your selected gene(s):\n")
+    print(genes)
+    
+  }
+  )
+
+  # wait for the list of genes to be submitted and then generated GO terms and table
+  GO_tbl <- eventReactive(input$submit_loc, {
+
     validate(
       need(input$GeneSymbol != '', "Please select a valid gene symbol")
     )
-    
-    search_gene <- input$GeneSymbol
-    GO_tbl <- getGO(organism = "Homo sapiens", genes = search_gene, filters = "hgnc_symbol")
+
+    genes <- as.character(unlist(strsplit(input$GeneSymbol, ", ")))
+    # search_gene <- unlist(strsplit(search_gene, split = ', '))
+    GO_tbl <- getGO(organism = "Homo sapiens", genes = genes, filters = "hgnc_symbol")
     GO_tbl
-    
+
   })
-  
+
+  # when table is generated render it for the UI
   output$GOtable = renderDataTable({
-    
+
     GO_tbl()[]
-    
+
   },extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
@@ -92,11 +116,18 @@ shinyServer(function(input, output) {
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                  buttons = list('copy', 'print', list(
                    extend = 'collection',
-                   buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_GOterms_', file.time)), 
+                   buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_GOterms_', file.time)),
                                   list(extend = 'excel', filename = paste0(input$SampleID, '_GOterms_', file.time)),
                                   list(extend = 'pdf', filename = paste0(input$SampleID, '_GOterms_', file.time))),
                    text = 'Download'
                  ))))
+
+  # potential to implement some sorting and ordering based on 'enriched' GO terms
+  # output$GOenrich = renderDataTable({
+  #
+  #   head(sort(table(GO_tbl$goslim_goa_description), decreasing = T), n = 10)
+  #
+  # })
     
   # customize the length drop-down menu; display 10 rows per page by default
   output$mytable1 = renderDataTable({
