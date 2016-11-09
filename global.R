@@ -19,8 +19,8 @@ tier0 <- read.csv(tier0.file, head = T, as.is = T)
 # generate link list for mutation assessor files
 MutAssess.links <- list.files(path = 'results/mutation_links', pattern = '.txt', include.dirs = T, recursive = T, full.names = T)
 #
-# MA.list <- MutAssess.links[grep('DG1051', MutAssess.links, fixed = T)]
-# MA.table <- read.table(MA.list, head = T, as.is = T)
+MA.list <- MutAssess.links[grep('DG1051', MutAssess.links, fixed = T)]
+MA.table <- read.table(MA.list, head = T, as.is = T)
 
 # get current day/date
 file.time <- format(Sys.time(), "%a_%b_%d_%Y")
