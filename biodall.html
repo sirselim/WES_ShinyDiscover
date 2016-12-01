@@ -1,0 +1,97 @@
+<script language="javascript" src="//www.biodalliance.org/release-0.13/dalliance-compiled.js"></script>
+<script language="javascript">
+  new Browser({
+    chr:          '7',
+    viewStart:    87057510,
+    viewEnd:      87126847,
+    cookieKey:    'WESTARC_human-grc_h37-fp',
+  
+    coordSystem: {
+      speciesName: 'Human',
+      taxon: 9606,
+      auth: 'GRCh',
+      version: '37',
+      ucscName: 'hg19'
+    },
+
+    sources:     [{name: 'Genome',
+                   twoBitURI: '//www.biodalliance.org/datasets/hg19.2bit',
+                   tier_type: 'sequence',
+                   provides_entrypoints: true,
+                   pinned: true
+                  },
+                   
+                  {name: 'Genes',
+                   desc: 'Gene structures from GENCODE 19',
+                   bwgURI: '//www.biodalliance.org/datasets/gencode.bb',
+                   stylesheet_uri: '//www.biodalliance.org/stylesheets/gencode.xml',
+                   collapseSuperGroups: true,
+                   trixURI: '//www.biodalliance.org/datasets/geneIndex.ix'},
+                   
+                  {name: 'SNPs',
+                   tier_type: 'ensembl',
+                   species:'human',
+                   type: 'variation',
+                   disabled: true,
+                   featureInfoPlugin: function(f, info) {
+                    if (f.id) {
+                      info.add('SNP', makeElement('a', f.id, {href: 'http://www.ensembl.org/Homo_sapiens/Variation/Summary?v=' + f.id, target: '_newtab'}));
+                    }
+                   }
+                  },
+
+                  {name: "DG1051_BAM",
+                   bamURI: "http://taurus.ihbi.qut.edu.au/~miles/bam/IonXpress_021_rawlib.bam"},
+                    
+                  {name: 'Repeats',
+                   desc: 'Repeat annotation from Ensembl',
+                   disabled: true,
+                   bwgURI: '//www.biodalliance.org/datasets/repeats.bb',
+                   stylesheet_uri: '//www.biodalliance.org/stylesheets/bb-repeats.xml'},
+                   
+                  {name: 'Conservation',
+                   desc: 'Conservation', 
+                   disabled: true,
+                   bwgURI: '//www.biodalliance.org/datasets/phastCons46way.bw',
+                   noDownsample: true},
+                   
+                  {name:"GWAS Catalog",
+                   desc:"NHGRI GWAS Catalog",
+                   disabled: true,
+                   style:[{type:"default",style:{glyph:"PLIMSOLL",SIZE:"12",STROKECOLOR:"black",FGCOLOR:"red",BUMP:"yes"}}],forceReduction:-1,bwgURI:"http://ngs.sanger.ac.uk/production/uk10k/dalliance/gwascatalog.bb"},
+
+                  {name: 'CpG',
+                   desc: 'CpG observed/expected ratio',
+                   disabled: true,
+                   uri: 'http://www.derkholm.net:8080/das/hg19comp/',
+                   // stylesheet_uri: 'http://www.derkholm.net/dalliance-test/stylesheets/cpg.xml'
+                   quantLeapThreshold: 0.8,
+                   forceReduction: -1,
+                   style:                [{type: 'cpgoe',
+                                           style: {glyph: 'LINEPLOT',
+                                                   FGCOLOR: 'blue', HEIGHT: '50', MIN: 0, MAX: 1.2}}]
+                  },
+                  
+                  {name: 'GM12878 ChromHMM', 
+                   disabled: true,
+                   desc: 'GM12878 ChromHMM Genome Segmentation', 
+                   pennant: '//genome.ucsc.edu/images/encodeThumbnail.jpg',
+                   bwgURI: '//www.biodalliance.org/datasets/encode/gm12878.ChromHMM.bb',
+                   style: [{type: 'bigbed', style: {glyph: 'BOX', FGCOLOR: 'black', BGCOLOR: 'blue', HEIGHT: 8, BUMP: false, LABEL: false, ZINDEX: 20, BGITEM: true, id: 'style1'}}, {type: 'bb-translation', style: {glyph: 'BOX', FGCOLOR: 'black', BGITEM: true, BGCOLOR: 'red', HEIGHT: 10, BUMP: true, ZINDEX: 20, id: 'style2'}}, {type: 'bb-transcript', style: {glyph: 'BOX', FGCOLOR: 'black', BGCOLOR: 'white', HEIGHT: 10, ZINDEX: 10, BUMP: true, LABEL: true, id: 'style3'}}]}
+                    
+                    ],
+
+    fullScreen: true,
+
+    browserLinks: {
+      Ensembl: 'http://www.ensembl.org/Homo_sapiens/Location/View?r=${chr}:${start}-${end}',
+      UCSC: 'http://genome.ucsc.edu/cgi-bin/hgTracks?db=hg19&position=chr${chr}:${start}-${end}',
+      Sequence: 'http://www.derkholm.net:8080/das/hg19comp/sequence?segment=${chr}:${start},${end}'
+    },
+    
+    hubs: ['http://ngs.sanger.ac.uk/production/ensembl/regulation/hub.txt', {url: 'http://ftp.ebi.ac.uk/pub/databases/ensembl/encode/integration_data_jan2011/hub.txt', genome: 'hg19', mapping: 'hg19ToHg38'}],
+
+  });
+</script>
+
+<div id="svgHolder"></div>

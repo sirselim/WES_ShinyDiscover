@@ -1,11 +1,23 @@
-library(shiny)
+# library('shiny')
 
 createLink <- function(val) {
   sprintf('<a href="%s" target="_blank" class="btn btn-primary">Link to Variant</a>',val)
 }
 
 shinyServer(function(input, output) {
-
+  
+  # create sampleID
+  output$currentSample <- renderText({
+    
+    validate(
+      need(input$SampleID != '', "Please select a valid SampleID")
+    )
+    
+    currentSample <- as.character(input$SampleID)
+    as.character(currentSample)
+    
+  })
+  
   # create reactive data for table
   tier0 <- reactive({
     
@@ -88,6 +100,136 @@ shinyServer(function(input, output) {
   }
   )
 
+  # observeEvent(
+  #   eventExpr = input[["submit_loc2"]],
+  #   handlerExpr = {
+  #     validate(
+  #       need(input$GeneSymbol != '', "Please select a valid gene symbol")
+  #     )
+  #     
+  #   }
+  # )
+  
+  # show genes being input int realtime
+  # output$hgnc_gene <- renderPrint({
+  #   
+  #   hgncgenes <- as.character(unlist(strsplit(input$hgncSymbol, ", ")))
+  #   cat("Your selected gene:\n")
+  #   print(hgncgenes)
+  #   
+  # }
+  # )
+  
+  # # wait for the list of genes to be submitted and then generated GO terms and table
+  # BMsearch <- eventReactive(input$submit_loc2, {
+  # 
+  #   validate(
+  #     need(input$hgncSymbol != '', "Please select a valid gene symbol")
+  #   )
+  # 
+  #   hgncgene <- as.character(unlist(strsplit(input$hgncSymbol, ", ")))
+  #   gene.search <- getBM(attributes = c("hgnc_symbol","entrezgene", "chromosome_name", "start_position", "end_position"), 
+  #                        filters = c("hgnc_symbol"), values = hgncgene, mart = ensembl54)
+  #   gene.search$chromosome_name <- paste0('chr', gene.search$chromosome_name)
+  #   gene.search <- gene.search[grep('chr[0-9]', gene.search$chromosome_name),]
+  #   
+  # })
+  
+  # # show genes being input int realtime
+  # output$BMgene <- renderDataTable({
+  #   
+  #   # cat("BioMart annotation (hg19/GRCh37):\n")
+  #   BMsearch()[]
+  #   
+  # }, rownames= FALSE, selection = list(target = 'cell', mode = "single"),
+  # caption = htmltools::tags$caption(
+  #   style = 'caption-side: bottom; text-align: center;',
+  #   'Table 7: ', htmltools::em('Gene annotation retrieved from BioMart (hg19/GRCh37).')
+  # ), options = list(dom = 't'))
+  # 
+  # # allow user to select gene to plot from table
+  # output$SelectedGene <- renderPrint(as.character(input$BMgene_cell_clicked)[3])
+  
+  # #
+  # SelectedGene <- reactive({
+  #   
+  #   validate(
+  #     need(input$BMgene_cell_clicked != '', "Please select a valid gene symbol from the BioMart table.")
+  #   )
+  #   
+  #   SelectedGene <- parse(text=as.character(input$BMgene_cell_clicked)[[3]])
+  #   # SelectedGene <- as.list(SelectedGene)
+  #   return(SelectedGene)
+  # })
+  
+  # #
+  # BamFile <- eventReactive(input$submit_loc2, {
+  #   
+  #   validate(
+  #     need(input$hgncSymbol != '', "Please select a valid gene symbol")
+  #   )
+  #   
+  #   # bam file to search
+  #   bam.file <- bam.list[grep(input$SampleID, bam.list, fixed = T)]
+  #   
+  # })
+  # 
+  # # show bam file being input in realtime
+  # output$BamFile <- renderPrint({
+  #   
+  #   cat("Bam file in use (NOTE: for testing purposes):\n")
+  #   BamFile()[]
+  #   
+  # }
+  # )
+  
+  # # create annotation plot
+  # output$VizPlot <- renderPlot({
+  #   
+  #   # validate(
+  #   #   need(input$BMgene_cell_clicked != '', "Please select a gene symbol from the above table")
+  #   # )
+  #   # library('Gviz')
+  #   # gene.search <- BMsearch()[]
+  #   # gene.search <- as.character(input$BMgene_cell_clicked)[3]
+  #   gene.out <- SelectedGene()[]
+  #   gene.search <- getBM(attributes = c("hgnc_symbol","entrezgene", "chromosome_name", "start_position", "end_position"), 
+  #                        filters = c("hgnc_symbol"), values = gene.out, mart = ensembl54)
+  #   gene.search$chromosome_name <- paste0('chr', gene.search$chromosome_name)
+  #   gene.search <- gene.search[grep('chr[0-9]', gene.search$chromosome_name),]
+  #   
+  #   # # bam file to search
+  #   bam.file <- BamFile()[]
+  #   # bam.file <- bam.list[grep(input$SampleID, bam.list, fixed = T)]
+  #   # asign bam file and prepare coverage and alignment tracks
+  #   alTrack <- Gviz::AlignmentsTrack(bam.file, isPaired=F) #Read bam file
+  #   # create gtrack
+  #   gtrack <- Gviz::GenomeAxisTrack()
+  #   # create dtrack
+  #   dtrack <- Gviz::DataTrack(range=bam.file, genome="hg19", name="Coverage", chromosome=gene.search$chromosome_name[[1]],
+  #                       type = "histogram", col.histogram= "#377EB8", fill="#377EB8") # need to check this if want multiple genes
+  #   # create ideogram track
+  #   itrack <- Gviz::IdeogramTrack(genome="hg19", chromosome=gene.search$chromosome_name[[1]]) #requires internet connection
+  #   # create transcript track
+  #   grtrack <- Gviz::GeneRegionTrack(TxDb.Hsapiens.UCSC.hg19.knownGene, genome = "hg19", chromosome=gene.search$chromosome_name[[1]], 
+  #                              name="TxDb.Hsapiens.UCSC.hg19") # need to check this if want multiple genes
+  #   # get transcript info for selected gene
+  #   # gene <- symbolToGene(gene.search$hgnc_symbol[[1]]) # need to check this if want multiple genes
+  #   # transcript.out <- geneToTranscript(gene)
+  #   # tran.start <- transcript.out@ranges@start[1]
+  #   # tran.end <- data.frame(transcript.out@ranges[length(transcript.out)])[[2]]
+  #   ##
+  #   # gene <- paste0('^', gene.search$hgnc_symbol[[1]], '$')
+  #   # tran.start <- min(ucsc.genes[grep(gene, ucsc.genes$V4),]$V2)
+  #   # tran.end <- max(ucsc.genes[grep(gene, ucsc.genes$V4),]$V3)
+  #   ##
+  #   tran.start <- gene.search$start_position[[1]]
+  #   tran.end <- gene.search$end_position[[1]]
+  #   # create plot
+  #   Gviz::plotTracks(list(itrack, gtrack, grtrack, alTrack), from = tran.start, to = tran.end)
+  #   
+  # }, res = 150, height = 650)
+  
   # wait for the list of genes to be submitted and then generated GO terms and table
   GO_tbl <- eventReactive(input$submit_loc, {
 
@@ -107,7 +249,7 @@ shinyServer(function(input, output) {
 
     GO_tbl()[]
 
-  },extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 6: ', htmltools::em('A list of GO terms for selected gene(s).')

@@ -1,6 +1,10 @@
-library(shiny)
-library(biomartr)
-library(DT)
+# required packages
+library('shiny')
+library('DT')
+# library('TxDb.Hsapiens.UCSC.hg19.knownGene')
+library('biomartr')
+# library("GenomicFeatures")
+# library('Gviz')
 
 shinyUI(fluidPage(
   
@@ -18,7 +22,7 @@ shinyUI(fluidPage(
   conditionalPanel(condition="input.conditionedPanels==2",
                    helpText('This tab presents a list of variants that are all annotated as MutationAssessor "highly" damaging.'),
                    helpText('For more detailed information the URL link will take you to the variant listing on MutationAssessor.'),
-                   textInput("SampleID", label = "Enter SampleID", value="DG1051"),
+                   # textInput("SampleID", label = "Enter SampleID", value="DG1051"), # there is an issue here with selecting wrong sample
                    checkboxGroupInput('show_vars2', 'Columns in results to show:', names(MA.table), selected = names(MA.table))
   ),
   conditionalPanel(condition="input.conditionedPanels==3",
@@ -26,7 +30,17 @@ shinyUI(fluidPage(
                             and retrieve a list of GO terms associtated with each gene.'),
                    helpText('i.e. input: "DDO, FTO, ATXN1" and press submit.'),
                    helpText('Note: as this is accessing the GO servers it can take a min or two, please be patient.')
-  )),
+  ),
+  conditionalPanel(condition="input.conditionedPanels==4",
+                   helpText('Biodalliance Embedded Genome Viewer.'),
+                   helpText('NOTE: this is now functioning but still under development.'))
+  # ),
+  # conditionalPanel(condition="input.conditionedPanels==5",
+  #                  helpText('This tool allows you to enter a gene symbol and generate a plot which includes information on genomic context, 
+  #                           all annotated transcripts, exon coverage and read alignment (based on data sourced from indexed bam file).'),
+  #                  helpText('You can generate a plot by clicking on a gene symbol in the table, clicking on another will generate 
+  #                           a new plot of that selected gene.'))
+  ),
   
   mainPanel(
     tabsetPanel(id = "conditionedPanels",
@@ -39,6 +53,7 @@ shinyUI(fluidPage(
       tabPanel('Tier3 variants', value=1,
                dataTableOutput("mytable4")),
       tabPanel('MutationAssessor variants', value=2,
+               h3('MutationAssessor variants for ',textOutput('currentSample', inline = T), align = "center"),
                dataTableOutput("mytable5")),
       tabPanel('GO search', value=3,
                fluidRow(
@@ -46,7 +61,19 @@ shinyUI(fluidPage(
                  column(1, align = 'right', actionButton(inputId = "submit_loc", label = "Submit"), class = 'rightAlign')
                ),
                verbatimTextOutput('GO_genes'),
-               dataTableOutput("GOtable"))
+               dataTableOutput("GOtable")),
+      # tabPanel('Exon alignment viewer', value=5,
+      #          fluidRow(
+      #            column(11, textInput("hgncSymbol", label = "Enter hgnc gene symbol", value="", width = '100%')),
+      #            column(1, align = 'right', actionButton(inputId = "submit_loc2", label = "Submit"), class = 'rightAlign')
+      #          ),
+      #          # verbatimTextOutput('hgnc_gene'),
+      #          # verbatimTextOutput('SelectedGene'),
+      #          dataTableOutput('BMgene'),
+      #          verbatimTextOutput('BamFile'),
+      #          plotOutput('VizPlot')),
+      tabPanel('Biodalliance Genome Viewer', value=4,
+               includeHTML('biodall.html'))
     )
   )
 ))
