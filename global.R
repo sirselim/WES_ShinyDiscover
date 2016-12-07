@@ -34,7 +34,7 @@ library("biomaRt")
 # MA.table <- read.table(MA.list, head = T, as.is = T)
 
 # load pre saved global data to speed up app load time
-load("~/gitrepos/WES_ShinyDiscover/global_load_data.RData")
+load("global_load_data.RData")
 
 # get current day/date
 file.time <- format(Sys.time(), "%a_%b_%d_%Y")
