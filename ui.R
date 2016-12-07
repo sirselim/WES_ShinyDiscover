@@ -45,12 +45,18 @@ shinyUI(fluidPage(
   mainPanel(
     tabsetPanel(id = "conditionedPanels",
       tabPanel('Tier0 variants', value=1,
+               helpText("NOTE: This  tier consists of all genes known to cause the conditions being investigated."),
                dataTableOutput("mytable1")),
       tabPanel('Tier1 variants', value=1,
+               helpText("NOTE: This tier consists of all genes in families or superfamilies which include the first tier genes, 
+                        in addition to any genes known to cause conditions or symptoms related to the primary analysis question."),
                dataTableOutput("mytable2")),
       tabPanel('Tier2 variants', value=1,
+               helpText("NOTE: This tier consists of genes in metabolic pathways known to be involved in 
+                        causing the conditions being investigated."),
                dataTableOutput("mytable3")),
       tabPanel('Tier3 variants', value=1,
+               helpText("NOTE: This tier includes all other genes and loci not included in the first three."),
                dataTableOutput("mytable4")),
       tabPanel('MutationAssessor variants', value=2,
                h3('MutationAssessor variants for ',textOutput('currentSample', inline = T), align = "center"),

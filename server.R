@@ -254,7 +254,7 @@ shinyServer(function(input, output) {
     style = 'caption-side: bottom; text-align: center;',
     'Table 6: ', htmltools::em('A list of GO terms for selected gene(s).')
   ), plugins = 'natural', server = F,
-  options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 25,
+  options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                  buttons = list('copy', 'print', list(
                    extend = 'collection',
@@ -377,7 +377,7 @@ shinyServer(function(input, output) {
     style = 'caption-side: bottom; text-align: center;',
     'Table 5: ', htmltools::em('A list of variants predicted as being potentially most damaging (Mutation Assessor High risk), including URL to variant information.')
   ), plugins = 'natural', server = F,
-  options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 25,
+  options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                  buttons = list('copy', 'print', list(
                    extend = 'collection',
