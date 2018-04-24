@@ -1,9 +1,9 @@
-# library('shiny')
-
+# 
 createLink <- function(val) {
   sprintf('<a href="%s" target="_blank" class="btn btn-primary">Link to Variant</a>',val)
 }
 
+# shiny server
 shinyServer(function(input, output) {
   
   # create sampleID

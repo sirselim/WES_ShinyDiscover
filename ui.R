@@ -1,17 +1,15 @@
 # required packages
 library('shiny')
 library('DT')
-# library('TxDb.Hsapiens.UCSC.hg19.knownGene')
 library('biomartr')
-# library("GenomicFeatures")
-# library('Gviz')
 
+# shiny ui
 shinyUI(fluidPage(
   
   # theme = "lumen.css",
   includeCSS("www/styles.css"),
 
-  headerPanel('WESTARC: visual results discovery for exome sequence data'),
+  headerPanel('VCF-DART Viewer: visual results discovery for NGS variant data'),
   
   sidebarPanel(width = 2, 
   conditionalPanel(condition="input.conditionedPanels==1",
@@ -34,12 +32,6 @@ shinyUI(fluidPage(
   conditionalPanel(condition="input.conditionedPanels==4",
                    helpText('Biodalliance Embedded Genome Viewer.'),
                    helpText('NOTE: this is now functioning but still under development.'))
-  # ),
-  # conditionalPanel(condition="input.conditionedPanels==5",
-  #                  helpText('This tool allows you to enter a gene symbol and generate a plot which includes information on genomic context, 
-  #                           all annotated transcripts, exon coverage and read alignment (based on data sourced from indexed bam file).'),
-  #                  helpText('You can generate a plot by clicking on a gene symbol in the table, clicking on another will generate 
-  #                           a new plot of that selected gene.'))
   ),
   
   mainPanel(
@@ -68,16 +60,6 @@ shinyUI(fluidPage(
                ),
                verbatimTextOutput('GO_genes'),
                dataTableOutput("GOtable")),
-      # tabPanel('Exon alignment viewer', value=5,
-      #          fluidRow(
-      #            column(11, textInput("hgncSymbol", label = "Enter hgnc gene symbol", value="", width = '100%')),
-      #            column(1, align = 'right', actionButton(inputId = "submit_loc2", label = "Submit"), class = 'rightAlign')
-      #          ),
-      #          # verbatimTextOutput('hgnc_gene'),
-      #          # verbatimTextOutput('SelectedGene'),
-      #          dataTableOutput('BMgene'),
-      #          verbatimTextOutput('BamFile'),
-      #          plotOutput('VizPlot')),
       tabPanel('Biodalliance Genome Viewer', value=4,
                includeHTML('biodall.html'))
     )
