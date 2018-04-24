@@ -3,7 +3,7 @@ A Shiny interface to filter and identify variants of interest from whole exome d
 
 ## Configure the `home` directory
 
-This is the directory that contains all the results files (from [VCF-DART]()) to be viewed.
+This is the directory that contains all the results files (from [VCF-DART](https://github.com/sirselim/diagnostics_exome_reporting)) to be viewed.
 
 The user is required to edit the appropriate line in the `global.R` file:
 
