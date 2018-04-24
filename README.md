@@ -1,5 +1,5 @@
-# WES_ShinyDiscover
-A Shiny interface to filter and identify variants of interest from whole exome data
+# VCF-DART Viewer (VCF file Diagnostics Annotation and Reporting Tool Viewer)
+A Shiny interface to filter and identify variants of interest from NGS variant data in VCF file format.
 
 ## Configure the `home` directory
 
