@@ -47,6 +47,8 @@ shinyServer(function(input, output) {
     sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
     tier0.file <- sample.list[grep('Tier0', sample.list)]
     tier0 <- read.csv(tier0.file, head = T, as.is = T)
+    # strange issue with newer VEP, adds '%3D' to syn ammino acid output - quick fix for now
+    tier0$AAchange <- gsub('*%3D', '.', tier0$AAchange)
     # create a URL link to NCBI for SNPs
     tier0$dbSNP <- unlist(lapply(tier0$dbSNP, createSNPLink))
     return(tier0)

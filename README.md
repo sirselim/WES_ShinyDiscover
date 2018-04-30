@@ -17,4 +17,5 @@ MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssess
 
 ## To-do list / feature list
 
+  - [ ] change repository name to refelct the new naming scheme (VCF-DART Viewer)
   - [x] ~~add ability to generate html links to NCBI for variants with RS numbers~~
