@@ -21,6 +21,19 @@ createSNPLink <- function(val) {
   # clean up leading ';' if present
   snp <- gsub('^;<', '<', snp)
 }
+# creating links to GnomAD
+# example: "http://gnomad.broadinstitute.org/variant/17-10215944-G-A"
+createGnomADLink <- function(tierData) {
+  # define variant search data
+  chr <- unlist(lapply(strsplit(tierData$location, split = ':'), '[[', 1)) %>% gsub('chr', '', .)
+  position <- unlist(lapply(strsplit(tierData$location, split = ':'), '[[', 2))
+  ref_geno <- tierData$ref
+  alt_geno <- tierData$alt
+  # make search term
+  gnomad <- paste(chr, position, ref_geno, alt_geno, sep = '-')
+  # create link
+  sprintf('<a href="http://gnomad.broadinstitute.org/variant/%s" target="_blank" class="btn btn-primary">GnomAD Link</a>', gnomad)
+}
 
 ## shiny server
 shinyServer(function(input, output) {
@@ -51,6 +64,8 @@ shinyServer(function(input, output) {
     tier0$AAchange <- gsub('.*%3D', '.', tier0$AAchange)
     # create a URL link to NCBI for SNPs
     tier0$dbSNP <- unlist(lapply(tier0$dbSNP, createSNPLink))
+    # create a URL button link to GnomAD
+    tier0$GnomAD <- createGnomADLink(tier0)
     return(tier0)
 
   })
@@ -68,6 +83,8 @@ shinyServer(function(input, output) {
     tier1$AAchange <- gsub('.*%3D', '.', tier1$AAchange)
     # create a URL link to NCBI for SNPs
     tier1$dbSNP <- unlist(lapply(tier1$dbSNP, createSNPLink))
+    # create a URL button link to GnomAD
+    tier1$GnomAD <- createGnomADLink(tier1)
     return(tier1)
     
   })
@@ -85,6 +102,8 @@ shinyServer(function(input, output) {
     tier2$AAchange <- gsub('.*%3D', '.', tier2$AAchange)
     # create a URL link to NCBI for SNPs
     tier2$dbSNP <- unlist(lapply(tier2$dbSNP, createSNPLink))
+    # create a URL button link to GnomAD
+    tier2$GnomAD <- createGnomADLink(tier2)
     return(tier2)
     
   })
@@ -102,6 +121,8 @@ shinyServer(function(input, output) {
     tier3$AAchange <- gsub('.*%3D', '.', tier3$AAchange)
     # create a URL link to NCBI for SNPs
     tier3$dbSNP <- unlist(lapply(tier3$dbSNP, createSNPLink))
+    # create a URL button link to GnomAD
+    tier3$GnomAD <- createGnomADLink(tier3)
     return(tier3)
     
   })
