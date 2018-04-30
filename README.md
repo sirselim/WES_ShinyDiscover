@@ -14,3 +14,7 @@ addResourcePath("homeDir", HOMEDIR)
 res.list <- list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
 MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
 ```
+
+## To-do list / feature list
+
+  - [x] add ability to generate html links to NCBI for variants with RS numbers
