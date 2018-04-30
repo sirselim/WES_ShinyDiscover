@@ -2,6 +2,7 @@
 library('shiny')
 library('DT')
 library('biomartr')
+library('magrittr')
 
 # shiny ui
 shinyUI(fluidPage(
@@ -18,7 +19,7 @@ shinyUI(fluidPage(
                    checkboxGroupInput('show_vars', 'Columns in results to show:', names(tier0), selected = names(tier0))
   ),
   conditionalPanel(condition="input.conditionedPanels==2",
-                   helpText('This tab presents a list of variants that are all annotated as MutationAssessor "highly" damaging.'),
+                   helpText('This tab presents a list of variants that are all annotated as MutationAssessor and Mutation Taster "highly" damaging.'),
                    helpText('For more detailed information the URL link will take you to the variant listing on MutationAssessor.'),
                    # textInput("SampleID", label = "Enter SampleID", value="DG1051"), # there is an issue here with selecting wrong sample
                    checkboxGroupInput('show_vars2', 'Columns in results to show:', names(MA.table), selected = names(MA.table))

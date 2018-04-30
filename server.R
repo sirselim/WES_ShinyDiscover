@@ -1,9 +1,28 @@
-# 
+## define functions to use throughout server script
+# create an html button linking out to Mutation Assessor which can be rendered in Shiny (by DT)
 createLink <- function(val) {
-  sprintf('<a href="%s" target="_blank" class="btn btn-primary">Link to Variant</a>',val)
+  sprintf('<a href="%s" target="_blank" class="btn btn-primary">Link to Variant</a>', val)
+}
+# create an html link to NCBI for SNPs which can be rendered in Shiny (by DT)
+createSNPLink <- function(val) {
+  # if there are mutiple snps split and unlist them
+  val <- unlist(strsplit(val, split = ';'))
+  snp <- NULL
+  # loop through multiple snps if present
+  for (i in val) {
+    # check if there is no snp ID, make NA if so
+    if (i == ".") {
+      snp <- "NA"
+      # else create html links for each snp present
+    } else {
+      snp <- paste(snp, sprintf(paste0('<a href="https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=%s" target="_blank">', i, '</a>'), i), sep = ';')
+    }
+  }
+  # clean up leading ';' if present
+  snp <- gsub('^;<', '<', snp)
 }
 
-# shiny server
+## shiny server
 shinyServer(function(input, output) {
   
   # create sampleID
@@ -28,6 +47,9 @@ shinyServer(function(input, output) {
     sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
     tier0.file <- sample.list[grep('Tier0', sample.list)]
     tier0 <- read.csv(tier0.file, head = T, as.is = T)
+    # create a URL link to NCBI for SNPs
+    tier0$dbSNP <- unlist(lapply(tier0$dbSNP, createSNPLink))
+    return(tier0)
 
   })
   # create reactive data for table
@@ -40,6 +62,9 @@ shinyServer(function(input, output) {
     sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
     tier1.file <- sample.list[grep('Tier1', sample.list)]
     tier1 <- read.csv(tier1.file, head = T, as.is = T)
+    # create a URL link to NCBI for SNPs
+    tier1$dbSNP <- unlist(lapply(tier1$dbSNP, createSNPLink))
+    return(tier1)
     
   })
   # create reactive data for table
@@ -52,6 +77,9 @@ shinyServer(function(input, output) {
     sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
     tier2.file <- sample.list[grep('Tier2', sample.list)]
     tier2 <- read.csv(tier2.file, head = T, as.is = T)
+    # create a URL link to NCBI for SNPs
+    tier2$dbSNP <- unlist(lapply(tier2$dbSNP, createSNPLink))
+    return(tier2)
     
   })
   # create reactive data for table
@@ -64,6 +92,9 @@ shinyServer(function(input, output) {
     sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
     tier3.file <- sample.list[grep('Tier3', sample.list)]
     tier3 <- read.csv(tier3.file, head = T, as.is = T)
+    # create a URL link to NCBI for SNPs
+    tier3$dbSNP <- unlist(lapply(tier3$dbSNP, createSNPLink))
+    return(tier3)
     
   })
   
@@ -76,6 +107,16 @@ shinyServer(function(input, output) {
     
     MA.list <- MutAssess.links[grep(input$SampleID, MutAssess.links, fixed = T)]
     MA.table <- read.table(MA.list, head = T, as.is = T)
+    # clean up gene symbol (this could be moved out to an external script...)
+    MA.table$GENESYM <-
+      sapply(sapply(strsplit(MA.table$GENESYM, ";"), unique), paste, collapse = ";") %>% 
+      gsub('^.;', '', .) %>%
+      gsub(';.$', '', .)
+    # ceate the URL link button to Mutation Assessor
+    MA.table$URL <- createLink(MA.table$URL)
+    # create a URL link to NCBI for SNPs
+    MA.table$RSNO <- unlist(lapply(MA.table$RSNO, createSNPLink))
+    return(MA.table)
     
   })
   
@@ -99,137 +140,7 @@ shinyServer(function(input, output) {
     
   }
   )
-
-  # observeEvent(
-  #   eventExpr = input[["submit_loc2"]],
-  #   handlerExpr = {
-  #     validate(
-  #       need(input$GeneSymbol != '', "Please select a valid gene symbol")
-  #     )
-  #     
-  #   }
-  # )
-  
-  # show genes being input int realtime
-  # output$hgnc_gene <- renderPrint({
-  #   
-  #   hgncgenes <- as.character(unlist(strsplit(input$hgncSymbol, ", ")))
-  #   cat("Your selected gene:\n")
-  #   print(hgncgenes)
-  #   
-  # }
-  # )
-  
-  # # wait for the list of genes to be submitted and then generated GO terms and table
-  # BMsearch <- eventReactive(input$submit_loc2, {
-  # 
-  #   validate(
-  #     need(input$hgncSymbol != '', "Please select a valid gene symbol")
-  #   )
-  # 
-  #   hgncgene <- as.character(unlist(strsplit(input$hgncSymbol, ", ")))
-  #   gene.search <- getBM(attributes = c("hgnc_symbol","entrezgene", "chromosome_name", "start_position", "end_position"), 
-  #                        filters = c("hgnc_symbol"), values = hgncgene, mart = ensembl54)
-  #   gene.search$chromosome_name <- paste0('chr', gene.search$chromosome_name)
-  #   gene.search <- gene.search[grep('chr[0-9]', gene.search$chromosome_name),]
-  #   
-  # })
-  
-  # # show genes being input int realtime
-  # output$BMgene <- renderDataTable({
-  #   
-  #   # cat("BioMart annotation (hg19/GRCh37):\n")
-  #   BMsearch()[]
-  #   
-  # }, rownames= FALSE, selection = list(target = 'cell', mode = "single"),
-  # caption = htmltools::tags$caption(
-  #   style = 'caption-side: bottom; text-align: center;',
-  #   'Table 7: ', htmltools::em('Gene annotation retrieved from BioMart (hg19/GRCh37).')
-  # ), options = list(dom = 't'))
-  # 
-  # # allow user to select gene to plot from table
-  # output$SelectedGene <- renderPrint(as.character(input$BMgene_cell_clicked)[3])
-  
-  # #
-  # SelectedGene <- reactive({
-  #   
-  #   validate(
-  #     need(input$BMgene_cell_clicked != '', "Please select a valid gene symbol from the BioMart table.")
-  #   )
-  #   
-  #   SelectedGene <- parse(text=as.character(input$BMgene_cell_clicked)[[3]])
-  #   # SelectedGene <- as.list(SelectedGene)
-  #   return(SelectedGene)
-  # })
-  
-  # #
-  # BamFile <- eventReactive(input$submit_loc2, {
-  #   
-  #   validate(
-  #     need(input$hgncSymbol != '', "Please select a valid gene symbol")
-  #   )
-  #   
-  #   # bam file to search
-  #   bam.file <- bam.list[grep(input$SampleID, bam.list, fixed = T)]
-  #   
-  # })
-  # 
-  # # show bam file being input in realtime
-  # output$BamFile <- renderPrint({
-  #   
-  #   cat("Bam file in use (NOTE: for testing purposes):\n")
-  #   BamFile()[]
-  #   
-  # }
-  # )
-  
-  # # create annotation plot
-  # output$VizPlot <- renderPlot({
-  #   
-  #   # validate(
-  #   #   need(input$BMgene_cell_clicked != '', "Please select a gene symbol from the above table")
-  #   # )
-  #   # library('Gviz')
-  #   # gene.search <- BMsearch()[]
-  #   # gene.search <- as.character(input$BMgene_cell_clicked)[3]
-  #   gene.out <- SelectedGene()[]
-  #   gene.search <- getBM(attributes = c("hgnc_symbol","entrezgene", "chromosome_name", "start_position", "end_position"), 
-  #                        filters = c("hgnc_symbol"), values = gene.out, mart = ensembl54)
-  #   gene.search$chromosome_name <- paste0('chr', gene.search$chromosome_name)
-  #   gene.search <- gene.search[grep('chr[0-9]', gene.search$chromosome_name),]
-  #   
-  #   # # bam file to search
-  #   bam.file <- BamFile()[]
-  #   # bam.file <- bam.list[grep(input$SampleID, bam.list, fixed = T)]
-  #   # asign bam file and prepare coverage and alignment tracks
-  #   alTrack <- Gviz::AlignmentsTrack(bam.file, isPaired=F) #Read bam file
-  #   # create gtrack
-  #   gtrack <- Gviz::GenomeAxisTrack()
-  #   # create dtrack
-  #   dtrack <- Gviz::DataTrack(range=bam.file, genome="hg19", name="Coverage", chromosome=gene.search$chromosome_name[[1]],
-  #                       type = "histogram", col.histogram= "#377EB8", fill="#377EB8") # need to check this if want multiple genes
-  #   # create ideogram track
-  #   itrack <- Gviz::IdeogramTrack(genome="hg19", chromosome=gene.search$chromosome_name[[1]]) #requires internet connection
-  #   # create transcript track
-  #   grtrack <- Gviz::GeneRegionTrack(TxDb.Hsapiens.UCSC.hg19.knownGene, genome = "hg19", chromosome=gene.search$chromosome_name[[1]], 
-  #                              name="TxDb.Hsapiens.UCSC.hg19") # need to check this if want multiple genes
-  #   # get transcript info for selected gene
-  #   # gene <- symbolToGene(gene.search$hgnc_symbol[[1]]) # need to check this if want multiple genes
-  #   # transcript.out <- geneToTranscript(gene)
-  #   # tran.start <- transcript.out@ranges@start[1]
-  #   # tran.end <- data.frame(transcript.out@ranges[length(transcript.out)])[[2]]
-  #   ##
-  #   # gene <- paste0('^', gene.search$hgnc_symbol[[1]], '$')
-  #   # tran.start <- min(ucsc.genes[grep(gene, ucsc.genes$V4),]$V2)
-  #   # tran.end <- max(ucsc.genes[grep(gene, ucsc.genes$V4),]$V3)
-  #   ##
-  #   tran.start <- gene.search$start_position[[1]]
-  #   tran.end <- gene.search$end_position[[1]]
-  #   # create plot
-  #   Gviz::plotTracks(list(itrack, gtrack, grtrack, alTrack), from = tran.start, to = tran.end)
-  #   
-  # }, res = 150, height = 650)
-  
+ 
   # wait for the list of genes to be submitted and then generated GO terms and table
   GO_tbl <- eventReactive(input$submit_loc, {
 
@@ -279,7 +190,8 @@ shinyServer(function(input, output) {
     )
     
     tier0()[, input$show_vars, drop = FALSE]
-  }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+    
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 1: ', htmltools::em('A list of variants passing the filter criteria for Tier0 (gene panel variants).')
@@ -302,7 +214,8 @@ shinyServer(function(input, output) {
     )
     
     tier1()[, input$show_vars, drop = FALSE]
-  }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+    
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 2: ', htmltools::em('A list of variants passing the filter criteria for Tier1.')
@@ -325,7 +238,8 @@ shinyServer(function(input, output) {
     )
     
     tier2()[, input$show_vars, drop = FALSE]
-  }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+    
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 3: ', htmltools::em('A list of variants passing the filter criteria for Tier2.')
@@ -348,7 +262,8 @@ shinyServer(function(input, output) {
     )
     
     tier3()[, input$show_vars, drop = FALSE]
-  }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+    
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 4: ', htmltools::em('A list of variants passing the filter criteria for Tier3.')
@@ -369,9 +284,8 @@ shinyServer(function(input, output) {
       need(try(nrow(MA.table() > 0)), paste0("Warning: data missing for ", input$SampleID))
     )
     
-    MA.out <- MA.table()
-    MA.out$URL <- createLink(MA.out$URL)
-    return(MA.out)
+    MA.table()[, input$show_vars2, drop = FALSE]
+    
   }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',

@@ -3,3 +3,5 @@
 .RData
 .Ruserdata
 test/
+results/
+testbed_code.R
