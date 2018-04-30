@@ -19,3 +19,6 @@ MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssess
 
   - [ ] change repository name to refelct the new naming scheme (VCF-DART Viewer)
   - [x] ~~add ability to generate html links to NCBI for variants with RS numbers~~
+  - [ ] strange issue with newer VEP, adds '%3D' to syn ammino acid coding annotation, i.e. p.Pro1620%3D
+    + [x] ~~added a quick fix to `server.R` to replace these values with `.`~~
+    + [ ] investigate this further, might require an issue on VEP GitHub
