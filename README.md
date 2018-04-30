@@ -17,4 +17,4 @@ MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssess
 
 ## To-do list / feature list
 
-  - [x] add ability to generate html links to NCBI for variants with RS numbers
+  - [x] ~~add ability to generate html links to NCBI for variants with RS numbers~~
