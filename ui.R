@@ -1,8 +1,7 @@
 # required packages
-library('shiny')
-library('DT')
-library('biomartr')   ## NOTE: need to test to see if this package is actually needed now 
-library('magrittr')
+require('shiny')
+require('DT')
+require('magrittr')
 
 # shiny ui
 shinyUI(fluidPage(

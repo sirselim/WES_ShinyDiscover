@@ -1,10 +1,12 @@
 ## global.R for VCF-DART Viewer
 # required packages
-library("biomaRt")
-## NOTE: need to test to see if this package is actually needed now
+require(GO.db)  ## NOTE: need to ensure this is installed on taurus (and add package depends to GitHub)
 
 # load pre saved global data to speed up app load time
 load("global_load_data.RData")
+
+# define GO terms
+goterms = unlist(Term(GOTERM))
 
 # set directory to search for results files
 HOMEDIR <- "/home/grcnata/"

@@ -5,7 +5,7 @@ The tool uses custom gene lists to categorise variants into specific analysis ti
 
 ![example screenshot](images/example_screenshot.png)
 
-Alongside the different tiers (first 4 tabs) there are 3 addtional tabs:
+Alongside the different tiers (first 4 tabs) there are 3 additional tabs:
 
   - **Mutation Assessor and Mutation Taster damaging:** A list of variants predicted as being potentially most damaging (Mutation Assessor High risk), including URL to variant information.
   - **Gene Ontology (GO) searching for a given gene/list of genes:** reports GO terms and links out to GO, UniProt and PubMed evidence (where present).
@@ -13,7 +13,7 @@ Alongside the different tiers (first 4 tabs) there are 3 addtional tabs:
 
 ## Configure the `home` directory
 
-This is the directory that contains all the results files (from [VCF-DART](https://github.com/sirselim/diagnostics_exome_reporting)) to be viewed. This must be set before runnin the VCF-Dart Viewer server.
+This is the directory that contains all the results files (from [VCF-DART](https://github.com/sirselim/diagnostics_exome_reporting)) to be viewed. This must be set before running the VCF-Dart Viewer server.
 
 The user is required to edit the appropriate line in the `global.R` file:
 
@@ -25,17 +25,32 @@ res.list <- list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
 MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
 ```
 
+## Package Dependencies
+
+VCF-DART Viewer requires the following packages (and their dependencies) to be installed for correct operation:
+
+```R
+# required packages
+require('shiny')
+require('DT')
+require('magrittr')
+require(GO.db)
+```
+
 ## To-do list / feature list
 
-  - [ ] change repository name to refelct the new naming scheme (VCF-DART Viewer)
+  - [ ] change repository name to reflect the new naming scheme (VCF-DART Viewer)
   - [x] ~~add ability to generate html links to NCBI for variants with RS numbers~~
   - [x] ~~add ability to generate html links out to GnomAD for each variant~~
   - [x] ~~investigate why the biomartr go function is taking so long~~
     + [x] ~~new method implemented, local database created and loaded in `global_load_data.RData`~~
-    + [x] ~~include linkinig out to GO, UniProt and NCBI from this table~~
-  - [ ] strange issue with newer VEP, adds '%3D' to syn ammino acid coding annotation, i.e. p.Pro1620%3D
+    + [x] ~~include linking out to GO, UniProt and NCBI from this table~~
+    + [x] ~~replace biomartr with GO.db - massive speed increase~~
+    + [x] ~~add ontology information to GO table~~
+  - [ ] strange issue with newer VEP, adds '%3D' to syn amino acid coding annotation, i.e. p.Pro1620%3D
     + [x] ~~added a quick fix to `server.R` to replace these values with `.`~~
     + [ ] investigate this further, might require an issue on VEP GitHub
   - [x] ~~investigate a bug where the file names don't reflect the correct sample when downloaded via the DT buttons~~
     + [x] ~~DT buttons aren't reactive, have removed sampleID from filename, user can define when downloading~~
   - [x] ~~fix issue with timestamp in filename when downloading data~~
+  - [x] ~~record the package dependencies~~

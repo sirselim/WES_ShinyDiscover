@@ -145,11 +145,13 @@ shinyServer(function(input, output) {
       need(input$GeneSymbol != '', "Please select a valid gene symbol")
     )
 
+    # grab gene(s)
     genes <- as.character(unlist(strsplit(input$GeneSymbol, ", ")))
-    # search_gene <- unlist(strsplit(search_gene, split = ', '))
-    # GO_tbl <- getGO(organism = "Homo sapiens", genes = genes, filters = "hgnc_symbol")
+    # create GO table to render
     GO_tbl <- go.data[grep(paste0(paste(genes, collapse = '$|'), '$'), go.data$gene),]
     GO_tbl <- GO_tbl[!duplicated(GO_tbl$goterm),]
+    GO_tbl$ontology <- goterms[grep(paste(GO_tbl$goterm, collapse = '|'), names(goterms))]
+    # generate links
     GO_tbl$goterm <- createGOLink(GO_tbl$goterm)
     GO_tbl$uniprot <- createUniProtLink(GO_tbl$uniprot)
     GO_tbl$pubmed <- createPMIDLink(GO_tbl$pubmed)
@@ -177,13 +179,6 @@ shinyServer(function(input, output) {
                    text = 'Download'
                  ))))
 
-  # potential to implement some sorting and ordering based on 'enriched' GO terms
-  # output$GOenrich = renderDataTable({
-  #
-  #   head(sort(table(GO_tbl$goslim_goa_description), decreasing = T), n = 10)
-  #
-  # })
-    
   # customize the length drop-down menu; display 10 rows per page by default
   output$mytable1 = renderDataTable({
     
