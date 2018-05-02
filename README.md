@@ -3,7 +3,7 @@ A Shiny interface to filter and identify variants of interest from NGS variant d
 
 The tool uses custom gene lists to categorise variants into specific analysis tiers and to subcategorise them based on standard parameters to facilitate the rapid interrogation of potentially pathogenic variants by human operators. For more information see our [manuscript](https://www.authorea.com/users/21564/articles/298265-a-customisable-scripting-system-for-identification-and-filtration-of-clinically-relevant-genetic-variants-in-whole-exome-or-large-gene-panel-data#).
 
-![]('images/example_screenshot.png')
+![](images/example_screenshot.png)
 
 Alongside the different tiers (first 4 tabs) there are 3 addtional tabs:
 
