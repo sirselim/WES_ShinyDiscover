@@ -1,7 +1,7 @@
 # required packages
 library('shiny')
 library('DT')
-library('biomartr')
+library('biomartr')   ## NOTE: need to test to see if this package is actually needed now 
 library('magrittr')
 
 # shiny ui
@@ -67,4 +67,3 @@ shinyUI(fluidPage(
     )
   )
 ))
-

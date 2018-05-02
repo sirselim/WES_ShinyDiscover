@@ -1,6 +1,7 @@
 ## global.R for VCF-DART Viewer
 # required packages
 library("biomaRt")
+## NOTE: need to test to see if this package is actually needed now
 
 # load pre saved global data to speed up app load time
 load("global_load_data.RData")
@@ -40,6 +41,7 @@ createSNPLink <- function(val) {
   # clean up leading ';' if present
   snp <- gsub('^;<', '<', snp)
 }
+
 # creating links to GnomAD
 # example: "http://gnomad.broadinstitute.org/variant/17-10215944-G-A"
 createGnomADLink <- function(tierData) {
@@ -53,14 +55,17 @@ createGnomADLink <- function(tierData) {
   # create link
   sprintf('<a href="http://gnomad.broadinstitute.org/variant/%s" target="_blank" class="btn btn-primary">GnomAD Link</a>', gnomad)
 }
+
 # GO link
 createGOLink <- function(goterm) {
   sprintf(paste0('<a href="http://amigo.geneontology.org/amigo/term/%s" target="_blank">', goterm, '</a>'), goterm)
 }
+
 # UniProt link
 createUniProtLink <- function(uniprot) {
   sprintf(paste0('<a href="http://www.uniprot.org/uniprot/%s" target="_blank">', uniprot, '</a>'), uniprot)
 }
+
 # PUBMED link
 createPMIDLink <- function(pmid) {
   sprintf(paste0('<a href="https://www.ncbi.nlm.nih.gov/pubmed/%s" target="_blank">', pmid, '</a>'), pmid)
