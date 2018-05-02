@@ -7,6 +7,7 @@ library('magrittr')
 # shiny ui
 shinyUI(fluidPage(
   
+  # custom CSS style
   # theme = "lumen.css",
   includeCSS("www/styles.css"),
 
@@ -15,7 +16,7 @@ shinyUI(fluidPage(
   sidebarPanel(width = 2, 
   conditionalPanel(condition="input.conditionedPanels==1",
                    helpText('Enter a SampleID and use the Tier tabs to filter exome variants based on the below variables.'),
-                   textInput("SampleID", label = "Enter SampleID", value="DG1051"),
+                   textInput("SampleID", label = "Enter SampleID", value=""),
                    checkboxGroupInput('show_vars', 'Columns in results to show:', names(tier0), selected = names(tier0))
   ),
   conditionalPanel(condition="input.conditionedPanels==2",

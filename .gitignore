@@ -6,3 +6,6 @@ test/
 results/
 testbed_code.R
 global_load_data.RData_bkup
+data/Homo_sapiens_GSEA_GO_sets_all_symbols_April_2015.gmt
+data/goa_human.gaf.gz
+data/goa_human.gaf

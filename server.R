@@ -1,40 +1,3 @@
-## define functions to use throughout server script
-# create an html button linking out to Mutation Assessor which can be rendered in Shiny (by DT)
-createLink <- function(val) {
-  sprintf('<a href="%s" target="_blank" class="btn btn-primary">Link to Variant</a>', val)
-}
-# create an html link to NCBI for SNPs which can be rendered in Shiny (by DT)
-createSNPLink <- function(val) {
-  # if there are mutiple snps split and unlist them
-  val <- unlist(strsplit(val, split = ';'))
-  snp <- NULL
-  # loop through multiple snps if present
-  for (i in val) {
-    # check if there is no snp ID, make NA if so
-    if (i == ".") {
-      snp <- "NA"
-      # else create html links for each snp present
-    } else {
-      snp <- paste(snp, sprintf(paste0('<a href="https://www.ncbi.nlm.nih.gov/projects/SNP/snp_ref.cgi?rs=%s" target="_blank">', i, '</a>'), i), sep = ';')
-    }
-  }
-  # clean up leading ';' if present
-  snp <- gsub('^;<', '<', snp)
-}
-# creating links to GnomAD
-# example: "http://gnomad.broadinstitute.org/variant/17-10215944-G-A"
-createGnomADLink <- function(tierData) {
-  # define variant search data
-  chr <- unlist(lapply(strsplit(tierData$location, split = ':'), '[[', 1)) %>% gsub('chr', '', .)
-  position <- unlist(lapply(strsplit(tierData$location, split = ':'), '[[', 2))
-  ref_geno <- tierData$ref
-  alt_geno <- tierData$alt
-  # make search term
-  gnomad <- paste(chr, position, ref_geno, alt_geno, sep = '-')
-  # create link
-  sprintf('<a href="http://gnomad.broadinstitute.org/variant/%s" target="_blank" class="btn btn-primary">GnomAD Link</a>', gnomad)
-}
-
 ## shiny server
 shinyServer(function(input, output) {
   
@@ -48,6 +11,11 @@ shinyServer(function(input, output) {
     currentSample <- as.character(input$SampleID)
     as.character(currentSample)
     
+  })
+  
+  # reactive file timestamp
+  observeEvent(input$SampleID, {
+    file.time <<- format(Sys.time(), "%a_%b_%d_%Y")
   })
   
   # create reactive data for table
@@ -170,7 +138,7 @@ shinyServer(function(input, output) {
   }
   )
  
-  # wait for the list of genes to be submitted and then generated GO terms and table
+  # wait for the list of genes to be submitted and then generate GO terms and table
   GO_tbl <- eventReactive(input$submit_loc, {
 
     validate(
@@ -179,8 +147,13 @@ shinyServer(function(input, output) {
 
     genes <- as.character(unlist(strsplit(input$GeneSymbol, ", ")))
     # search_gene <- unlist(strsplit(search_gene, split = ', '))
-    GO_tbl <- getGO(organism = "Homo sapiens", genes = genes, filters = "hgnc_symbol")
-    GO_tbl
+    # GO_tbl <- getGO(organism = "Homo sapiens", genes = genes, filters = "hgnc_symbol")
+    GO_tbl <- go.data[grep(paste0(paste(genes, collapse = '$|'), '$'), go.data$gene),]
+    GO_tbl <- GO_tbl[!duplicated(GO_tbl$goterm),]
+    GO_tbl$goterm <- createGOLink(GO_tbl$goterm)
+    GO_tbl$uniprot <- createUniProtLink(GO_tbl$uniprot)
+    GO_tbl$pubmed <- createPMIDLink(GO_tbl$pubmed)
+    return(GO_tbl)
 
   })
 
@@ -189,7 +162,7 @@ shinyServer(function(input, output) {
 
     GO_tbl()[]
 
-  }, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 6: ', htmltools::em('A list of GO terms for selected gene(s).')
@@ -215,7 +188,7 @@ shinyServer(function(input, output) {
   output$mytable1 = renderDataTable({
     
     validate(
-      need(try(nrow(tier0() > 0)), paste0("Warning: data missing for ", input$SampleID))
+      need(try(nrow(tier0() > 0)), paste0("WARNING: sample not found (", input$SampleID, ')'))
     )
     
     tier0()[, input$show_vars, drop = FALSE]
@@ -229,9 +202,9 @@ shinyServer(function(input, output) {
                      "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                      buttons = list('copy', 'print', list(
                        extend = 'collection',
-                       buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_tier0_filtered_', file.time)), 
-                                      list(extend = 'excel', filename = paste0(input$SampleID, '_tier0_filtered_', file.time)),
-                                      list(extend = 'pdf', filename = paste0(input$SampleID, '_tier0_filtered_', file.time))),
+                       buttons = list(list(extend = 'csv', filename = paste0('VCF-DART_tier0_filtered_', file.time)), 
+                                      list(extend = 'excel', filename = paste0('VCF-DART_tier0_filtered_', file.time)),
+                                      list(extend = 'pdf', filename = paste0('VCF-DART_tier0_filtered_', file.time))),
                        text = 'Download'
                      ))))
 
@@ -239,7 +212,7 @@ shinyServer(function(input, output) {
   output$mytable2 = renderDataTable({
     
     validate(
-      need(try(nrow(tier1() > 0)), paste0("Warning: data missing for ", input$SampleID))
+      need(try(nrow(tier1() > 0)), paste0("WARNING: sample not found (", input$SampleID, ')'))
     )
     
     tier1()[, input$show_vars, drop = FALSE]
@@ -253,9 +226,9 @@ shinyServer(function(input, output) {
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                     buttons = list('copy', 'print', list(
                       extend = 'collection',
-                      buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_tier1_filtered_', file.time)), 
-                                     list(extend = 'excel', filename = paste0(input$SampleID, '_tier1_filtered_', file.time)),
-                                     list(extend = 'pdf', filename = paste0(input$SampleID, '_tier1_filtered_', file.time))),
+                      buttons = list(list(extend = 'csv', filename = paste0('VCF-DART_tier1_filtered_', file.time)), 
+                                     list(extend = 'excel', filename = paste0('VCF-DART_tier1_filtered_', file.time)),
+                                     list(extend = 'pdf', filename = paste0('VCF-DART_tier1_filtered_', file.time))),
                       text = 'Download'
                     ))))
 
@@ -263,7 +236,7 @@ shinyServer(function(input, output) {
   output$mytable3 = renderDataTable({
     
     validate(
-      need(try(nrow(tier2() > 0)), paste0("Warning: data missing for ", input$SampleID))
+      need(try(nrow(tier2() > 0)), paste0("WARNING: sample not found (", input$SampleID, ')'))
     )
     
     tier2()[, input$show_vars, drop = FALSE]
@@ -277,9 +250,9 @@ shinyServer(function(input, output) {
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                     buttons = list('copy', 'print', list(
                       extend = 'collection',
-                      buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_tier2_filtered_', file.time)), 
-                                     list(extend = 'excel', filename = paste0(input$SampleID, '_tier2_filtered_', file.time)),
-                                     list(extend = 'pdf', filename = paste0(input$SampleID, '_tier2_filtered_', file.time))),
+                      buttons = list(list(extend = 'csv', filename = paste0('VCF-DART_tier2_filtered_', file.time)), 
+                                     list(extend = 'excel', filename = paste0('VCF-DART_tier2_filtered_', file.time)),
+                                     list(extend = 'pdf', filename = paste0('VCF-DART_tier2_filtered_', file.time))),
                       text = 'Download'
                     ))))
   
@@ -287,7 +260,7 @@ shinyServer(function(input, output) {
   output$mytable4 = renderDataTable({
     
     validate(
-      need(try(nrow(tier3() > 0)), paste0("Warning: data missing for ", input$SampleID))
+      need(try(nrow(tier3() > 0)), paste0("WARNING: sample not found (", input$SampleID, ')'))
     )
     
     tier3()[, input$show_vars, drop = FALSE]
@@ -301,16 +274,16 @@ shinyServer(function(input, output) {
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                     buttons = list('copy', 'print', list(
                       extend = 'collection',
-                      buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_tier3_filtered_', file.time)), 
-                                     list(extend = 'excel', filename = paste0(input$SampleID, '_tier3_filtered_', file.time)),
-                                     list(extend = 'pdf', filename = paste0(input$SampleID, '_tier3_filtered_', file.time))),
+                      buttons = list(list(extend = 'csv', filename = paste0('VCF-DART_tier3_filtered_', file.time)), 
+                                     list(extend = 'excel', filename = paste0('VCF-DART_tier3_filtered_', file.time)),
+                                     list(extend = 'pdf', filename = paste0('VCF-DART_tier3_filtered_', file.time))),
                       text = 'Download'
                     ))))
 
   output$mytable5 = renderDataTable({
     
     validate(
-      need(try(nrow(MA.table() > 0)), paste0("Warning: data missing for ", input$SampleID))
+      need(try(nrow(MA.table() > 0)), paste0("WARNING: sample not found (", input$SampleID, ')'))
     )
     
     MA.table()[, input$show_vars2, drop = FALSE]
@@ -324,9 +297,9 @@ shinyServer(function(input, output) {
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                  buttons = list('copy', 'print', list(
                    extend = 'collection',
-                   buttons = list(list(extend = 'csv', filename = paste0(input$SampleID, '_MutationAssessor_filtered_', file.time)), 
-                                  list(extend = 'excel', filename = paste0(input$SampleID, '_MutationAssessor_filtered_', file.time)),
-                                  list(extend = 'pdf', filename = paste0(input$SampleID, '_MutationAssessor_filtered_', file.time))),
+                   buttons = list(list(extend = 'csv', filename = paste0('VCF-DART_MutationAssessor_filtered_', file.time)), 
+                                  list(extend = 'excel', filename = paste0('VCF-DART_MutationAssessor_filtered_', file.time)),
+                                  list(extend = 'pdf', filename = paste0('VCF-DART_MutationAssessor_filtered_', file.time))),
                    text = 'Download'
                  ))))
   

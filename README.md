@@ -23,3 +23,4 @@ MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssess
   - [ ] strange issue with newer VEP, adds '%3D' to syn ammino acid coding annotation, i.e. p.Pro1620%3D
     + [x] ~~added a quick fix to `server.R` to replace these values with `.`~~
     + [ ] investigate this further, might require an issue on VEP GitHub
+  - [ ] investigate a bug where the file names don't reflect the correct sample when downloaded via the DT buttons
