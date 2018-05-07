@@ -164,7 +164,7 @@ shinyServer(function(input, output) {
 
     GO_tbl()[]
 
-  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE, selection = 'single',
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 6: ', htmltools::em('A list of GO terms for selected gene(s).')
@@ -188,7 +188,7 @@ shinyServer(function(input, output) {
     
     tier0()[, input$show_vars, drop = FALSE]
     
-  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE, selection = 'single',
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 1: ', htmltools::em('A list of variants passing the filter criteria for Tier0 (gene panel variants).')
@@ -212,7 +212,7 @@ shinyServer(function(input, output) {
     
     tier1()[, input$show_vars, drop = FALSE]
     
-  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE, selection = 'single',
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 2: ', htmltools::em('A list of variants passing the filter criteria for Tier1.')
@@ -236,7 +236,7 @@ shinyServer(function(input, output) {
     
     tier2()[, input$show_vars, drop = FALSE]
     
-  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE, selection = 'single',
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 3: ', htmltools::em('A list of variants passing the filter criteria for Tier2.')
@@ -260,7 +260,7 @@ shinyServer(function(input, output) {
     
     tier3()[, input$show_vars, drop = FALSE]
     
-  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE, selection = 'single',
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 4: ', htmltools::em('A list of variants passing the filter criteria for Tier3.')
@@ -283,7 +283,7 @@ shinyServer(function(input, output) {
     
     MA.table()[, input$show_vars2, drop = FALSE]
     
-  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE,
+  }, escape = FALSE, extensions = 'Buttons', filter = "bottom", rownames= FALSE, selection = 'single',
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 5: ', htmltools::em('A list of variants predicted as being potentially most damaging (Mutation Assessor High risk), including URL to variant information.')
