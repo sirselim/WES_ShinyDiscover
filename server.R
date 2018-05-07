@@ -148,7 +148,7 @@ shinyServer(function(input, output) {
     # grab gene(s)
     genes <- as.character(unlist(strsplit(input$GeneSymbol, ", ")))
     # create GO table to render
-    GO_tbl <- go.data[grep(paste0(paste(genes, collapse = '$|'), '$'), go.data$gene),]
+    GO_tbl <- go.data[grep(paste0(paste(paste0('^', genes), collapse = '$|'), '$'), go.data$gene),]
     GO_tbl <- GO_tbl[!duplicated(GO_tbl$goterm),]
     GO_tbl$ontology <- goterms[grep(paste(GO_tbl$goterm, collapse = '|'), names(goterms))]
     # generate links
