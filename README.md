@@ -24,17 +24,25 @@ addResourcePath("homeDir", HOMEDIR)
 res.list <- list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
 MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
 ```
+## Software Dependencies
 
-## Package Dependencies
+The following programs need to be available/installed for correct operation:
+
+  - [R](https://www.r-project.org/)
+  - [Shiny Server](https://www.rstudio.com/products/shiny/shiny-server/)
+
+## R Package Dependencies
 
 VCF-DART Viewer requires the following packages (and their dependencies) to be installed for correct operation:
 
 ```R
-# required packages
-require('shiny')
-require('DT')
-require('magrittr')
-require(GO.db)
+# CRAN
+install.packages('shiny')
+install.packages('DT')
+install.packages('magrittr')
+# bioconductor
+source("https://bioconductor.org/biocLite.R")
+biocLite('GO.db')
 ```
 
 ## To-do list / feature list
