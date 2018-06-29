@@ -9,7 +9,7 @@ load("global_load_data.RData")
 goterms = unlist(Term(GOTERM))
 
 # set directory to search for results files
-HOMEDIR <- "/home/grcnata/"
+HOMEDIR <- "/home/grcnata"
 #HOMEDIR <- "."
 addResourcePath("homeDir", HOMEDIR)
 res.list <- list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)

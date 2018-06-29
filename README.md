@@ -48,6 +48,11 @@ biocLite('GO.db')
 ## To-do list / feature list
 
   - [ ] change repository name to reflect the new naming scheme (VCF-DART Viewer)
+  - [ ] add ability to download the precompiled report generated in the VCF-DART module
+    + [ ] either a new tab or a button in the sidebar
+  - [x] ~~fix bug that means server has to be restarted to identify recent results~~
+    + [x] ~~added some functions using reactivePoll to monitor the updating and creation of files~~
+    + [x] ~~test the above fix to ensure it is truely reactive~~
   - [x] ~~add ability to generate html links to NCBI for variants with RS numbers~~
   - [x] ~~add ability to generate html links out to GnomAD for each variant~~
   - [x] ~~investigate why the biomartr go function is taking so long~~

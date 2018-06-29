@@ -1,5 +1,5 @@
 ## shiny server
-shinyServer(function(input, output) {
+shinyServer(function(input, output, session) {
   
   # create sampleID
   output$currentSample <- renderText({
@@ -18,6 +18,30 @@ shinyServer(function(input, output) {
     file.time <<- format(Sys.time(), "%a_%b_%d_%Y")
   })
   
+  ###
+  # reactive monitoring of results files
+  has.new.files <- function() {
+    unique(list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T))
+  }
+  get.files <- function() {
+    list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
+  }
+  
+  # store as a reactive instead of output
+  res_files <- reactivePoll(10, session, checkFunc = has.new.files, valueFunc = get.files)
+  
+  # reactive monitoring of mutationassessor files
+  new.mut.files <- function() {
+    unique(list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T))
+  }
+  get.mut.files <- function() {
+    list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
+  }
+  
+  # store as a reactive instead of output
+  mut_files <- reactivePoll(10, session, checkFunc = new.mut.files, valueFunc = get.mut.files)
+  ###
+  
   # create reactive data for table
   tier0 <- reactive({
     
@@ -25,7 +49,7 @@ shinyServer(function(input, output) {
       need(input$SampleID != '', "Please select a valid SampleID")
     )
     
-    sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
+    sample.list <- res_files()[grep(input$SampleID, res_files(), fixed = T)]
     tier0.file <- sample.list[grep('Tier0', sample.list)]
     tier0 <- read.csv(tier0.file, head = T, as.is = T)
     # strange issue with newer VEP, adds '%3D' to syn ammino acid output - quick fix for now
@@ -44,7 +68,7 @@ shinyServer(function(input, output) {
       need(input$SampleID != '', "Please select a valid SampleID")
     )
     
-    sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
+    sample.list <- res_files()[grep(input$SampleID, res_files(), fixed = T)]
     tier1.file <- sample.list[grep('Tier1', sample.list)]
     tier1 <- read.csv(tier1.file, head = T, as.is = T)
     # strange issue with newer VEP, adds '%3D' to syn ammino acid output - quick fix for now
@@ -63,7 +87,7 @@ shinyServer(function(input, output) {
       need(input$SampleID != '', "Please select a valid SampleID")
     )
     
-    sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
+    sample.list <- res_files()[grep(input$SampleID, res_files(), fixed = T)]
     tier2.file <- sample.list[grep('Tier2', sample.list)]
     tier2 <- read.csv(tier2.file, head = T, as.is = T)
     # strange issue with newer VEP, adds '%3D' to syn ammino acid output - quick fix for now
@@ -82,7 +106,7 @@ shinyServer(function(input, output) {
       need(input$SampleID != '', "Please select a valid SampleID")
     )
     
-    sample.list <- res.list[grep(input$SampleID, res.list, fixed = T)]
+    sample.list <- res_files()[grep(input$SampleID, res_files(), fixed = T)]
     tier3.file <- sample.list[grep('Tier3', sample.list)]
     tier3 <- read.csv(tier3.file, head = T, as.is = T)
     # strange issue with newer VEP, adds '%3D' to syn ammino acid output - quick fix for now
@@ -102,7 +126,7 @@ shinyServer(function(input, output) {
       need(input$SampleID != '', "Please select a valid SampleID")
     )
     
-    MA.list <- MutAssess.links[grep(input$SampleID, MutAssess.links, fixed = T)]
+    MA.list <- mut_files()[grep(input$SampleID, mut_files(), fixed = T)]
     MA.table <- read.table(MA.list, head = T, as.is = T)
     # clean up gene symbol (this could be moved out to an external script...)
     MA.table$GENESYM <-
