@@ -83,7 +83,8 @@ shinyUI(fluidPage(
               helpText("Click below to download the a compressed file containing the run directory with all data and results."),
               downloadButton("downloadData_all", label = "Download All Data")),
       tabPanel('Help', value=6,
-               tags$h1("Help / Getting Started [...under construction...]"))
+               tags$h1("Help / Getting Started [...under construction...]"),
+               includeHTML('help.html'))
     )
   )
 ))
