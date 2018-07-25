@@ -32,7 +32,14 @@ shinyUI(fluidPage(
   ),
   conditionalPanel(condition="input.conditionedPanels==4",
                    helpText('Biodalliance Embedded Genome Viewer.'),
-                   helpText('NOTE: this is now functioning but still under development.'))
+                   helpText('NOTE: this is now functioning but still under development.')
+  ),
+  conditionalPanel(condition="input.conditionedPanels==5",
+                   helpText('Downloads section (TESTING).'),
+                   helpText('NOTE: this section is still under development.')),
+  conditionalPanel(condition="input.conditionedPanels==6",
+                   helpText('Help section (TESTING).'),
+                   helpText('NOTE: this section is still under development.'))
   ),
   
   mainPanel(
@@ -62,7 +69,21 @@ shinyUI(fluidPage(
                verbatimTextOutput('GO_genes'),
                dataTableOutput("GOtable")),
       tabPanel('Biodalliance Genome Viewer', value=4,
-               includeHTML('biodall.html'))
+               includeHTML('biodall.html')),
+      tabPanel('Downloads', value=5,
+              tags$h1("Clinical Report Document"),
+              helpText("Click below to download the generated clinical report (.docx) for this sample."),
+              downloadButton("downloadData", label = "Download Report"),
+              HTML('<hr style="color: black;">'),
+              tags$h1("Run Log File"),
+              helpText("Click below to download the log file (.log) for this samples annotation run."),
+              downloadButton("downloadData_log", label = "Download Log File"),
+              HTML('<hr style="color: black;">'),
+              tags$h1("[Coming soon...] All files (compressed)"),
+              helpText("Click below to download the a compressed file containing the run directory with all data and results."),
+              downloadButton("downloadData_all", label = "Download All Data")),
+      tabPanel('Help', value=6,
+               tags$h1("Help / Getting Started [...under construction...]"))
     )
   )
 ))

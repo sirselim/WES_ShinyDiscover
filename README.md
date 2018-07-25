@@ -1,4 +1,5 @@
 # VCF-DART Viewer (VCF file Diagnostics Annotation and Reporting Tool Viewer)
+
 A Shiny interface to filter and identify variants of interest from NGS variant data in VCF file format.
 
 The tool uses custom gene lists to categorise variants into specific analysis tiers and to subcategorise them based on standard parameters to facilitate the rapid interrogation of potentially pathogenic variants by human operators. For more information see our [manuscript](https://www.authorea.com/users/21564/articles/298265-a-customisable-scripting-system-for-identification-and-filtration-of-clinically-relevant-genetic-variants-in-whole-exome-or-large-gene-panel-data#).
@@ -24,6 +25,7 @@ addResourcePath("homeDir", HOMEDIR)
 res.list <- list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
 MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
 ```
+
 ## Software Dependencies
 
 The following programs need to be available/installed for correct operation:

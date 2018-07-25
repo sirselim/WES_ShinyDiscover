@@ -18,7 +18,8 @@ shinyServer(function(input, output, session) {
     file.time <<- format(Sys.time(), "%a_%b_%d_%Y")
   })
   
-  ###
+  ### reactive file monitoring 
+  ##
   # reactive monitoring of results files
   has.new.files <- function() {
     unique(list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T))
@@ -26,10 +27,10 @@ shinyServer(function(input, output, session) {
   get.files <- function() {
     list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
   }
-  
   # store as a reactive instead of output
   res_files <- reactivePoll(10, session, checkFunc = has.new.files, valueFunc = get.files)
   
+  ##
   # reactive monitoring of mutationassessor files
   new.mut.files <- function() {
     unique(list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T))
@@ -37,9 +38,30 @@ shinyServer(function(input, output, session) {
   get.mut.files <- function() {
     list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
   }
-  
   # store as a reactive instead of output
   mut_files <- reactivePoll(10, session, checkFunc = new.mut.files, valueFunc = get.mut.files)
+
+  ## set up for download button
+  # reactive monitoring of final report files
+  new.report.files <- function() {
+    unique(list.files(HOMEDIR, recursive = T, pattern = '_report.docx', full.names = T))
+  }
+  get.report.files <- function() {
+    list.files(HOMEDIR, recursive = T, pattern = '_report.docx', full.names = T)
+  }
+  # store as a reactive instead of output
+  report_files <- reactivePoll(10, session, checkFunc = new.report.files, valueFunc = get.report.files)
+  
+  ## set up for download button
+  # reactive monitoring of log files
+  new.log.files <- function() {
+    unique(list.files(HOMEDIR, recursive = T, pattern = '.log', full.names = T))
+  }
+  get.log.files <- function() {
+    list.files(HOMEDIR, recursive = T, pattern = '.log', full.names = T)
+  }
+  # store as a reactive instead of output
+  log_files <- reactivePoll(10, session, checkFunc = new.log.files, valueFunc = get.log.files)
   ###
   
   # create reactive data for table
@@ -321,5 +343,30 @@ shinyServer(function(input, output, session) {
                                   list(extend = 'pdf', filename = paste0('VCF-DART_MutationAssessor_filtered_', file.time))),
                    text = 'Download'
                  ))))
+
+  ## report download
+      output$downloadData <- downloadHandler(
+        filename <- function() {
+          paste0(input$SampleID, "_clinical_report", ".docx")
+        },
+
+        content <- function(file) {
+          # file.copy("reports/DG1051_wes_run_001_GRC_report.docx", file)
+          file.copy(paste0(report_files()[grep(input$SampleID, report_files(), fixed = T)]), file)
+        },
+        contentType = "text/docx"
+      )
   
+  ## log file download
+      output$downloadData_log <- downloadHandler(
+        filename <- function() {
+          paste0(input$SampleID, "_annotation_logfile", ".log")
+        },
+
+        content <- function(file) {
+          file.copy(paste0(log_files()[grep(input$SampleID, log_files(), fixed = T)]), file)
+        },
+        contentType = "text/log"
+      )
+
 })
