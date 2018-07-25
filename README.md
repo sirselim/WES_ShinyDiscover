@@ -50,8 +50,9 @@ biocLite('GO.db')
 ## To-do list / feature list
 
   - [ ] change repository name to reflect the new naming scheme (VCF-DART Viewer)
-  - [ ] add ability to download the precompiled report generated in the VCF-DART module
-    + [ ] either a new tab or a button in the sidebar
+  - [x] ~~add ability to download the precompiled report generated in the VCF-DART module~~
+    + [x] ~~either a new tab or a button in the sidebar~~
+    + [x] ~~also added ability to download log files~~
   - [x] ~~fix bug that means server has to be restarted to identify recent results~~
     + [x] ~~added some functions using reactivePoll to monitor the updating and creation of files~~
     + [x] ~~test the above fix to ensure it is truely reactive~~
