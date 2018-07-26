@@ -351,7 +351,6 @@ shinyServer(function(input, output, session) {
         },
 
         content <- function(file) {
-          # file.copy("reports/DG1051_wes_run_001_GRC_report.docx", file)
           file.copy(paste0(report_files()[grep(input$SampleID, report_files(), fixed = T)]), file)
         },
         contentType = "text/docx"

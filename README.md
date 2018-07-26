@@ -50,6 +50,7 @@ biocLite('GO.db')
 ## To-do list / feature list
 
   - [ ] change repository name to reflect the new naming scheme (VCF-DART Viewer)
+  - [x] ~~added a help / getting started tab~~
   - [x] ~~add ability to download the precompiled report generated in the VCF-DART module~~
     + [x] ~~either a new tab or a button in the sidebar~~
     + [x] ~~also added ability to download log files~~
