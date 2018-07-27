@@ -62,6 +62,17 @@ shinyServer(function(input, output, session) {
   }
   # store as a reactive instead of output
   log_files <- reactivePoll(10, session, checkFunc = new.log.files, valueFunc = get.log.files)
+
+  ## set up for download button
+  # reactive monitoring of all files in compressed format (tar.gz)
+  new.zipped.files <- function() {
+    unique(list.files(HOMEDIR, recursive = T, pattern = '.tar.gz', full.names = T))
+  }
+  get.zipped.files <- function() {
+    list.files(HOMEDIR, recursive = T, pattern = '.tar.gz', full.names = T)
+  }
+  # store as a reactive instead of output
+  zipped_files <- reactivePoll(10, session, checkFunc = new.zipped.files, valueFunc = get.zipped.files)
   ###
   
   # create reactive data for table
@@ -366,6 +377,17 @@ shinyServer(function(input, output, session) {
           file.copy(paste0(log_files()[grep(input$SampleID, log_files(), fixed = T)]), file)
         },
         contentType = "text/log"
+      )
+
+  ## log file download
+      output$downloadData_all <- downloadHandler(
+        filename <- function() {
+          paste0(input$SampleID, "_vcfdart_output", ".tar.gz")
+        },
+
+        content <- function(file) {
+          file.copy(paste0(zipped_files()[grep(input$SampleID, zipped_files(), fixed = T)]), file)
+        }
       )
 
 })
