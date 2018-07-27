@@ -54,6 +54,7 @@ biocLite('GO.db')
   - [x] ~~add ability to download the precompiled report generated in the VCF-DART module~~
     + [x] ~~either a new tab or a button in the sidebar~~
     + [x] ~~also added ability to download log files~~
+    + [x] ~~added ability to download an archieve (.tar.gz) of al run data~~
   - [x] ~~fix bug that means server has to be restarted to identify recent results~~
     + [x] ~~added some functions using reactivePoll to monitor the updating and creation of files~~
     + [x] ~~test the above fix to ensure it is truely reactive~~
