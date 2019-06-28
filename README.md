@@ -1,4 +1,4 @@
 # WES_ShinyDiscover
 A Shiny interface to filter and identify variants of interest from whole exome data
 
-current stable branch: https://github.com/sirselim/WES_ShinyDiscover/directory-selection/
+Please use the version available in the `diectory-selection` branch - we will update master brunch soon.
