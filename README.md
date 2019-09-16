@@ -3,7 +3,7 @@
 A Shiny interface to filter and identify variants of interest from NGS variant data in VCF file format.
 
 Published article: 
-> Benton MC, Smith RA, Haupt LM, Sutherland HG, Dunn PJ, Albury CL, Maksemous N, Lea RA, and Griffiths LR. (2019) _Variant Call Format (VCF)-Diagnostic Annotation and Reporting Tool (VCF-DART) A Customizable Analysis Pipeline for Identification of Clinically Relevant Genetic Variants in Next-Generation Sequencing Data_. [(article)](https://jmd.amjpathol.org/article/S1525-1578(19)30353-8/fulltext)
+> Benton MC, Smith RA, Haupt LM, Sutherland HG, Dunn PJ, Albury CL, Maksemous N, Lea RA, and Griffiths LR. (2019) _Variant Call Format (VCF)-Diagnostic Annotation and Reporting Tool (VCF-DART) A Customizable Analysis Pipeline for Identification of Clinically Relevant Genetic Variants in Next-Generation Sequencing Data_. The Journal of Molecular Diagnostics [(article)](https://jmd.amjpathol.org/article/S1525-1578(19)30353-8/fulltext)
 
 -----
 
