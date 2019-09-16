@@ -10,7 +10,8 @@ goterms = unlist(Term(GOTERM))
 
 # set directory to search for results files
 # HOMEDIR <- "/home/grcnata"
-HOMEDIR <- "."
+# HOMEDIR <- "."
+HOMEDIR <- "/data/PostDoc/WelingtonGeneticsLab/annotated"
 addResourcePath("homeDir", HOMEDIR)
 res.list <- list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
 MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
@@ -56,6 +57,25 @@ createGnomADLink <- function(tierData) {
   gnomad <- paste(chr, position, ref_geno, alt_geno, sep = '-')
   # create link
   sprintf('<a href="http://gnomad.broadinstitute.org/variant/%s" target="_blank" class="btn btn-primary">GnomAD Link</a>', gnomad)
+}
+
+# create an html link to ClinGen for currated genes which can be rendered in Shiny (by DT)
+# example: https://search.clinicalgenome.org/kb/genes/HGNC:60
+createHUGOLink <- function(symbols) {
+  # if there are mutiple symbols, split and unlist them
+  symbols <- unlist(strsplit(symbols, split = ';'))
+  symbols <- symbols[symbols != "."]
+  # match HUGO ID to symbols
+  hugoid <- hugo.data[hugo.data$Approved_Symbol %in% symbols,]$HGNC_ID
+  # dummy data
+  clingen <- NULL
+  # loop through multiple gene symbols if present
+  for (i in hugoid) {
+      # create html links for each gene symbol present
+      clingen <- paste(clingen, sprintf(paste0('<a href="https://search.clinicalgenome.org/kb/genes/%s" target="_blank">', i, '</a>'), i), sep = ';')
+    }
+  # clean up leading ';' if present
+  clingen <- gsub('^;<', '<', clingen)
 }
 
 # GO link

@@ -1,5 +1,6 @@
 # required packages
 require('shiny')
+require('shinyBS')
 require('DT')
 require('magrittr')
 
@@ -15,7 +16,10 @@ shinyUI(fluidPage(
   sidebarPanel(width = 2, 
   conditionalPanel(condition="input.conditionedPanels==1",
                    helpText('Enter a SampleID and use the Tier tabs to filter exome variants based on the below variables.'),
-                   textInput("SampleID", label = "Enter SampleID", value=""),
+                   tipify(  
+                    textInput("SampleID", label = "Enter SampleID", value=""),
+                   title = 'The entered SampleID will be used to match results produced from the VCF-DART tool.', 
+                   placement = "right", options = list(container = "body")),
                    checkboxGroupInput('show_vars', 'Columns in results to show:', names(tier0), selected = names(tier0))
   ),
   conditionalPanel(condition="input.conditionedPanels==2",

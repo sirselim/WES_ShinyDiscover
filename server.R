@@ -17,8 +17,8 @@ shinyServer(function(input, output, session) {
   observeEvent(input$SampleID, {
     file.time <<- format(Sys.time(), "%a_%b_%d_%Y")
   })
-  
-  ### reactive file monitoring 
+
+  ### reactive file monitoring
   ##
   # reactive monitoring of results files
   has.new.files <- function() {
@@ -28,8 +28,8 @@ shinyServer(function(input, output, session) {
     list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
   }
   # store as a reactive instead of output
-  res_files <- reactivePoll(10, session, checkFunc = has.new.files, valueFunc = get.files)
-  
+  res_files <- reactivePoll(30000, session, checkFunc = has.new.files, valueFunc = get.files)
+
   ##
   # reactive monitoring of mutationassessor files
   new.mut.files <- function() {
@@ -39,7 +39,7 @@ shinyServer(function(input, output, session) {
     list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
   }
   # store as a reactive instead of output
-  mut_files <- reactivePoll(10, session, checkFunc = new.mut.files, valueFunc = get.mut.files)
+  mut_files <- reactivePoll(30000, session, checkFunc = new.mut.files, valueFunc = get.mut.files)
 
   ## set up for download button
   # reactive monitoring of final report files
@@ -50,8 +50,8 @@ shinyServer(function(input, output, session) {
     list.files(HOMEDIR, recursive = T, pattern = '_report.docx', full.names = T)
   }
   # store as a reactive instead of output
-  report_files <- reactivePoll(10, session, checkFunc = new.report.files, valueFunc = get.report.files)
-  
+  report_files <- reactivePoll(30000, session, checkFunc = new.report.files, valueFunc = get.report.files)
+
   ## set up for download button
   # reactive monitoring of log files
   new.log.files <- function() {
@@ -61,7 +61,7 @@ shinyServer(function(input, output, session) {
     list.files(HOMEDIR, recursive = T, pattern = '.log', full.names = T)
   }
   # store as a reactive instead of output
-  log_files <- reactivePoll(10, session, checkFunc = new.log.files, valueFunc = get.log.files)
+  log_files <- reactivePoll(30000, session, checkFunc = new.log.files, valueFunc = get.log.files)
 
   ## set up for download button
   # reactive monitoring of all files in compressed format (tar.gz)
@@ -72,7 +72,7 @@ shinyServer(function(input, output, session) {
     list.files(HOMEDIR, recursive = T, pattern = '.tar.gz', full.names = T)
   }
   # store as a reactive instead of output
-  zipped_files <- reactivePoll(10, session, checkFunc = new.zipped.files, valueFunc = get.zipped.files)
+  zipped_files <- reactivePoll(30000, session, checkFunc = new.zipped.files, valueFunc = get.zipped.files)
   ###
   
   # create reactive data for table
@@ -91,6 +91,8 @@ shinyServer(function(input, output, session) {
     tier0$dbSNP <- unlist(lapply(tier0$dbSNP, createSNPLink))
     # create a URL button link to GnomAD
     tier0$GnomAD <- createGnomADLink(tier0)
+    # create a URL button link to GnomAD
+    # tier0$ClinGen <- unlist(lapply(tier0$gene, createHUGOLink))
     return(tier0)
 
   })
@@ -110,6 +112,8 @@ shinyServer(function(input, output, session) {
     tier1$dbSNP <- unlist(lapply(tier1$dbSNP, createSNPLink))
     # create a URL button link to GnomAD
     tier1$GnomAD <- createGnomADLink(tier1)
+    # create a URL button link to GnomAD
+    # tier1$ClinGen <- unlist(lapply(tier1$gene, createHUGOLink))
     return(tier1)
     
   })
@@ -129,6 +133,8 @@ shinyServer(function(input, output, session) {
     tier2$dbSNP <- unlist(lapply(tier2$dbSNP, createSNPLink))
     # create a URL button link to GnomAD
     tier2$GnomAD <- createGnomADLink(tier2)
+    # create a URL button link to GnomAD
+    # tier2$ClinGen <- unlist(lapply(tier2$gene, createHUGOLink))
     return(tier2)
     
   })
@@ -148,6 +154,8 @@ shinyServer(function(input, output, session) {
     tier3$dbSNP <- unlist(lapply(tier3$dbSNP, createSNPLink))
     # create a URL button link to GnomAD
     tier3$GnomAD <- createGnomADLink(tier3)
+    # create a URL button link to GnomAD
+    # tier3$ClinGen <- unlist(lapply(tier3$gene, createHUGOLink))
     return(tier3)
     
   })
@@ -225,7 +233,7 @@ shinyServer(function(input, output, session) {
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 6: ', htmltools::em('A list of GO terms for selected gene(s).')
-  ), plugins = 'natural', server = F,
+  ), plugins = 'natural', server = T,
   options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                  buttons = list('copy', 'print', list(
@@ -249,7 +257,7 @@ shinyServer(function(input, output, session) {
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 1: ', htmltools::em('A list of variants passing the filter criteria for Tier0 (gene panel variants).')
-  ), plugins = 'natural', server = F,
+  ), plugins = 'natural', server = T,
       options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                      "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                      buttons = list('copy', 'print', list(
@@ -273,7 +281,7 @@ shinyServer(function(input, output, session) {
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 2: ', htmltools::em('A list of variants passing the filter criteria for Tier1.')
-  ), plugins = 'natural', server = F,
+  ), plugins = 'natural', server = T,
   options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                     buttons = list('copy', 'print', list(
@@ -344,7 +352,7 @@ shinyServer(function(input, output, session) {
   caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: center;',
     'Table 5: ', htmltools::em('A list of variants predicted as being potentially most damaging (Mutation Assessor High risk), including URL to variant information.')
-  ), plugins = 'natural', server = F,
+  ), plugins = 'natural', server = T,
   options = list(orderClasses = TRUE, lengthMenu = c(10, 25, 50, 100, 200), pageLength = 10,
                  "dom" = 'T<"clear">lBfrtip', columnDefs = list(list(type = "natural", targets = "_all")),
                  buttons = list('copy', 'print', list(
@@ -379,7 +387,7 @@ shinyServer(function(input, output, session) {
         contentType = "text/log"
       )
 
-  ## log file download
+  ## compressed data file download
       output$downloadData_all <- downloadHandler(
         filename <- function() {
           paste0(input$SampleID, "_vcfdart_output", ".tar.gz")
