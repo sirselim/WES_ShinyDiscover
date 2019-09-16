@@ -10,8 +10,7 @@ goterms = unlist(Term(GOTERM))
 
 # set directory to search for results files
 # HOMEDIR <- "/home/grcnata"
-# HOMEDIR <- "."
-HOMEDIR <- "/data/PostDoc/WelingtonGeneticsLab/annotated"
+HOMEDIR <- "."
 addResourcePath("homeDir", HOMEDIR)
 res.list <- list.files(HOMEDIR, recursive = T, pattern = '.csv', full.names = T)
 MutAssess.links <- list.files(HOMEDIR, recursive = T, pattern = '_MutationAssessor_links_', full.names = T)
