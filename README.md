@@ -2,6 +2,40 @@
 
 A Shiny interface to filter and identify variants of interest from NGS variant data in VCF file format.
 
+Published article: 
+> Benton MC, Smith RA, Haupt LM, Sutherland HG, Dunn PJ, Albury CL, Maksemous N, Lea RA, and Griffiths LR. (2019) _Variant Call Format (VCF)-Diagnostic Annotation and Reporting Tool (VCF-DART) A Customizable Analysis Pipeline for Identification of Clinically Relevant Genetic Variants in Next-Generation Sequencing Data_. [(article)](https://jmd.amjpathol.org/article/S1525-1578(19)30353-8/fulltext)
+
+-----
+
+## IMPORTANT - Please Read
+
+This repository contains the most stable version of VCF-DART that accompanies the published article. For more recent stable and development builds and to contribute please visit the [Genomics Aotearoa](https://github.com/GenomicsAotearoa) GitHub.
+
+**Disclaimer**
+
+Please note that this is a beta version of the VCF-DART platform which is
+still undergoing final testing before its official release. The
+platform, its software and all content found on it are provided on an
+“as is” and “as available” basis. VCF-DART does not give any warranties,
+whether express or implied, as to the suitability or usability of the
+website, server, its software or any of its content.
+
+VCF-DART will not be liable for any loss, whether such loss is direct,
+indirect, special or consequential, suffered by any party as a result
+of their use of the VCF-DART platform, its software or content. Any
+downloading or uploading of material to the website/server is done at the
+user’s own risk and the user will be solely responsible for any
+damage to any computer system or loss of data that results from such
+activities.
+
+Should you encounter any bugs, glitches, lack of functionality or
+other problems on the website, please let us know immediately so we
+can rectify these accordingly. Your help in this regard is greatly
+appreciated! The best way to do this is to log an issue in this GitHub repository, 
+or if you feel inclined you are welcome to create a pull request.
+
+-----
+
 The tool uses custom gene lists to categorise variants into specific analysis tiers and to subcategorise them based on standard parameters to facilitate the rapid interrogation of potentially pathogenic variants by human operators. For more information see our [manuscript](https://www.authorea.com/users/21564/articles/298265-a-customisable-scripting-system-for-identification-and-filtration-of-clinically-relevant-genetic-variants-in-whole-exome-or-large-gene-panel-data#).
 
 ![example screenshot](images/example_screenshot.png)
